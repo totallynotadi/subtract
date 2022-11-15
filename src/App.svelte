@@ -36,7 +36,7 @@
       seekBarTrackColorNeedsSet = !seekBarTrackColorNeedsSet;
     }
     if (seekBarThumbColorNeedsSet && seekBarThumbElement != null) {
-      seekBarThumbElement.style.backgroundColor = "#cacaca";
+      seekBarThumbElement.style.backgroundColor = "white";
       seekBarThumbElement.style.blockSize = "12px";
       seekBarThumbElement.style.inlineSize = "12px";
 
