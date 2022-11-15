@@ -1,7 +1,13 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 * {
     color: #cacaca;
     box-sizing: border-box;
     font-family: sans-serif;
+    font-smooth: always;
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 body, html{
     margin: 0rem;
@@ -10,6 +16,8 @@ body, html{
 
 html {
     background-image: linear-gradient(to bottom, #363636, #121212, #0B0B0B);
+    /* background-image: linear-gradient(to bottom, #181a1b, #121212, #0B0B0B); */
+    /* background-color: #181a1b; */
 }
 
 .icon-circle {
