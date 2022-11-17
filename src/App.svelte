@@ -10,7 +10,8 @@
   import Shuffle from "svelte-material-icons/Shuffle.svelte";
   import Repeat from "svelte-material-icons/Repeat.svelte";
 
-  import { Slider } from "fluent-svelte";
+  // import { Slider } from "fluent-svelte";
+  import Slider from "./lib/Slider/Slider.svelte";
   import "fluent-svelte/theme.css";
 
   import logo from "./assets/Subtract.png";
@@ -24,7 +25,7 @@
   let seekBarThumbElement = null;
   let seekBarContainerElement = null;
 
-  let seekBarValue = 0;
+  let seekBarValue = 20;
 
   let playerState = true;
 
@@ -36,9 +37,9 @@
       seekBarTrackColorNeedsSet = !seekBarTrackColorNeedsSet;
     }
     if (seekBarThumbColorNeedsSet && seekBarThumbElement != null) {
-      seekBarThumbElement.style.backgroundColor = "white";
-      seekBarThumbElement.style.blockSize = "12px";
-      seekBarThumbElement.style.inlineSize = "12px";
+      seekBarThumbElement.style.backgroundColor = "#cacaca";
+      seekBarThumbElement.style.blockSize = "10px";
+      seekBarThumbElement.style.inlineSize = "10px";
 
       seekBarThumbElement.style.opacity = "0";
       seekBarThumbElement.style.transition = "opacity 0.2s ease-in-out";
@@ -126,6 +127,7 @@
                   <Repeat size="1.4rem" color="#aaaaaa" />
                 </div>
                 <Slider
+                  tooltip={false}
                   bind:trackElement={seekBarTrackElement}
                   bind:inputElement={seekBarInputElement}
                   bind:thumbElement={seekBarThumbElement}
