@@ -1,4 +1,6 @@
 <script>
+  // @ts-nocheck
+
   import Home from "svelte-material-icons/Home.svelte";
   import User from "svelte-material-icons/Account.svelte";
   import Search from "svelte-material-icons/Magnify.svelte";
@@ -10,12 +12,43 @@
   import Shuffle from "svelte-material-icons/Shuffle.svelte";
   import Repeat from "svelte-material-icons/Repeat.svelte";
 
+  import MusicBoxMultiple from "svelte-material-icons/MusicBoxMultiple.svelte";
+  import Bookshelf from "svelte-material-icons/Bookshelf.svelte";
+  import Compass from "svelte-material-icons/Compass.svelte";
+  import AccessPoint from "svelte-material-icons/AccessPoint.svelte";
+  import PlusBoxMultiple from "svelte-material-icons/PlusBoxMultiple.svelte";
+
   // import { Slider } from "fluent-svelte";
-  import Slider from "./lib/Slider/Slider.svelte";
+  import Slider from "./lib/components/Slider/Slider.svelte";
   import "fluent-svelte/theme.css";
 
   import logo from "./assets/Subtract.png";
-  import IconContainer from "./lib/IconContainer.svelte";
+  import IconContainer from "./lib/components/IconContainer.svelte";
+  import SidebarMenuItem from "./lib/components/SidebarMenuItem.svelte";
+
+  import { Router, Route, Link } from "svelte-navigator";
+
+  import HomeScreen from "./lib/pages/HomeScreen.svelte";
+  import LibraryScreen from "./lib/pages/LibraryScreen.svelte";
+  import DiscoverPage from "./lib/pages/DiscoverPage.svelte";
+  import CreatePlaylistPage from "./lib/pages/CreatePlaylistPage.svelte";
+
+  import { currentPath } from "./lib/stores.js";
+  import { onDestroy, onMount } from "svelte";
+  import { globalHistory } from "svelte-navigator/src/history";
+
+  let unsub;
+
+  onMount(() => {
+    unsub = globalHistory.listen(({ location, action }) => {
+      console.log(location, action);
+      $currentPath = location.pathname;
+    });
+  });
+
+  onDestroy(() => {
+    unsub();
+  });
 
   let seekBarTrackColorNeedsSet = true;
   let seekBarThumbColorNeedsSet = true;
@@ -42,7 +75,7 @@
       seekBarThumbElement.style.inlineSize = "10px";
 
       seekBarThumbElement.style.opacity = "0";
-      seekBarThumbElement.style.transition = "opacity 0.2s ease-in-out";
+      seekBarThumbElement.style.transition = "opacity 0.1s ease-in-out";
 
       seekBarContainerElement.onmouseover = function (e) {
         seekBarThumbElement.style.opacity = "1";
@@ -55,100 +88,183 @@
       seekBarThumbColorNeedsSet = !seekBarThumbColorNeedsSet;
     }
   }
-  const wait = () => new Promise((res) => setTimeout(res, 2 * 1000));
+  const wait = () => new Promise((res) => setTimeout(res, 0 * 1000));
+
+  let boxWidth = window.innerWidth - 32;
+  let columnGap = 18;
+  $: columnCount = Math.round(boxWidth / 230);
 </script>
 
 {#await wait()}
-  <div class="scaffold">d</div>
+  <div class="scaffold">loading...</div>
 {:then data}
-  <div class="scaffold">
-    <div class="column">
-      <div class="h-top-bar w-100">
-        <div class="row">
-          <img src={logo} alt="S U B T R A C T" style="width:3rem" />
-          <div class="flex-container home-search-container">
-            <IconContainer icon={Home} size="3rem" color="#aaaaaa" />
-            <div
-              class="search-bar-container icon-circle"
-              style="border-radius:3rem;"
-            >
-              <Search size="1.6rem" color="#aaaaaa" />
-              <input
-                type="search"
-                placeholder="What do you wan to listen to?"
-                name="search-field"
-                id="search-field"
-              />
-            </div>
-          </div>
-          <div>
-            <IconContainer icon={User} size="3rem" color="#aaaaaa" />
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="column box-1">
-          <div class="container border-rad icon-box-circle" />
-          <div
-            class="container border-rad icon-box-circle"
-            style="background-color: #181a1b; background-image: none"
-          >
-            <div class="column player-card">
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b2739db23262359f6744c28e9615"
-                width="210"
-                height="210"
-                alt="L M A O"
-                class="cover-art"
-                defer
-              />
-              <div class="track-details">
-                <div class="track-artist-title">
-                  <div class="track-title">Sacrifice</div>
-                  <div class="track-artists">Alex, Tokyo Rose, The Akuma</div>
-                </div>
-                <div style="height: 1.2rem; width: 1.2rem;">
-                  <Favorite size="1.2rem" color="rgb(255, 255, 0)" />
-                </div>
-              </div>
-              <div
-                class="seek-bar-container"
-                bind:this={seekBarContainerElement}
-              >
-                <div class="controls-container">
-                  <Shuffle size="1.4rem" color="#aaaaaa" />
-                  <Previous size="1.8rem" color="#aaaaaa" />
-                  {#if playerState}
-                    <Play size="2.4rem" color="#aaaaaa" />
-                  {:else}
-                    <Pause size="2.4rem" color="#aaaaaa" />;
-                  {/if}
-                  <Next size="1.8rem" color="#aaaaaa" />
-                  <Repeat size="1.4rem" color="#aaaaaa" />
-                </div>
-                <Slider
-                  tooltip={false}
-                  bind:trackElement={seekBarTrackElement}
-                  bind:inputElement={seekBarInputElement}
-                  bind:thumbElement={seekBarThumbElement}
-                  bind:value={seekBarValue}
+  <Router primary={false}>
+    <div class="scaffold">
+      <div class="column">
+        <div class="h-top-bar w-100">
+          <div class="row">
+            <img
+              src={logo}
+              alt="S U B T R A C T"
+              style="width:2.8rem; filter: drop-shadow(0 0 0.6rem grey);"
+            />
+            <div class="flex-container home-search-container">
+              <Link to="/">
+                <IconContainer
+                  icon={Home}
+                  containerSize="3.2rem"
+                  iconSize="1.6rem"
+                  color="#aaaaaa"
                 />
-                <div class="timestamp-container">
-                  <div class="timestamp">1:34</div>
-                  <div class="timestamp">4:25</div>
+              </Link>
+              <div
+                class="search-bar-container icon-circle"
+                style="border-radius:3rem;"
+              >
+                <Search size="1.6rem" color="#aaaaaa" />
+                <input
+                  type="search"
+                  placeholder="What would you listen to today?"
+                  name="search-field"
+                  id="search-field"
+                />
+              </div>
+            </div>
+            <div>
+              <IconContainer
+                icon={User}
+                containerSize="3.2rem"
+                iconSize="1.6rem"
+                color="#aaaaaa"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="column box-1">
+            <div
+              class="container border-rad icon-box-circle"
+              style="min-height:170px"
+            >
+              <ul class="sidebar-options">
+                <li>
+                  <SidebarMenuItem
+                    itemTitle={"Library"}
+                    linkTo={"library"}
+                    icon={MusicBoxMultiple}
+                  />
+                </li>
+                <li>
+                  <SidebarMenuItem
+                    itemTitle={"Discover"}
+                    linkTo={"discover"}
+                    icon={AccessPoint}
+                  />
+                </li>
+                <li>
+                  <SidebarMenuItem
+                    itemTitle={"Create Playlist"}
+                    linkTo={"create-playlist"}
+                    icon={PlusBoxMultiple}
+                  />
+                </li>
+              </ul>
+            </div>
+            <div
+              class="container border-rad icon-box-circle"
+              style="background-color: #181a1b; background-image: none; height:fit-content; flex: 0 0 fit-content"
+            >
+              <div class="column player-card">
+                <img
+                  src="https://i.scdn.co/image/ab67616d0000b273f6ace12946d9796dc0cdd533"
+                  width="210"
+                  height="210"
+                  alt="L M A O"
+                  class="cover-art"
+                  defer
+                />
+                <div class="track-details">
+                  <div class="track-artist-title">
+                    <div class="track-title">Sacrifice</div>
+                    <div class="track-artists">Alex, Tokyo Rose, The Akuma</div>
+                  </div>
+                  <div style="height: 1.2rem; width: 1.2rem;">
+                    <Favorite size="1.2rem" color="rgb(255, 255, 0)" />
+                  </div>
+                </div>
+                <div
+                  class="seek-bar-container"
+                  bind:this={seekBarContainerElement}
+                >
+                  <div class="controls-container">
+                    <Shuffle size="1.4rem" color="#aaaaaa" />
+                    <Previous size="1.8rem" color="#aaaaaa" />
+                    {#if playerState}
+                      <Play size="2.4rem" color="#aaaaaa" />
+                    {:else}
+                      <Pause size="2.4rem" color="#aaaaaa" />;
+                    {/if}
+                    <Next size="1.8rem" color="#aaaaaa" />
+                    <Repeat size="1.4rem" color="#aaaaaa" />
+                  </div>
+                  <Slider
+                    tooltip={false}
+                    bind:trackElement={seekBarTrackElement}
+                    bind:inputElement={seekBarInputElement}
+                    bind:thumbElement={seekBarThumbElement}
+                    bind:value={seekBarValue}
+                  />
+                  <div class="timestamp-container">
+                    <div class="timestamp">1:34</div>
+                    <div class="timestamp">4:25</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          <div
+            class="box-2 container border-rad icon-box-circle"
+            bind:clientWidth={boxWidth}
+          >
+            <Route>
+              <HomeScreen bind:columnCount bind:columnGap />
+            </Route>
+            <Route path="library">
+              <LibraryScreen />
+            </Route>
+            <Route path="discover">
+              <DiscoverPage />
+            </Route>
+            <Route path="create-playlist">
+              <CreatePlaylistPage />
+            </Route>
+          </div>
+          <div id="box-3" class="box-3 container border-rad icon-box-circle">
+            <button
+              style="border:none; background-color:rgba(50, 50, 50, 0.5); border-radius:50%; width:2rem; height:2rem;"
+              on:click={function () {
+                let sidebar = document.getElementById("box-3");
+                sidebar.style.flexBasis =
+                  sidebar.style.flexBasis == "70px" ? "240px" : "70px";
+              }}
+            >
+              ←
+            </button>
+          </div>
         </div>
-        <div class="box-2 container border-rad icon-box-circle" />
-        <div class="box-3 container border-rad icon-box-circle" />
       </div>
     </div>
-  </div>
+  </Router>
 {/await}
 
 <style>
+  ul,
+  li {
+    padding: 0px;
+    margin: 0px;
+    list-style: none;
+  }
+
   .scaffold {
     height: 100vh;
     width: 100vw;
@@ -201,7 +317,7 @@
     gap: 0.8rem;
     align-items: center;
     width: 100%;
-    height: 3rem;
+    height: 3.2rem;
     border-radius: 1rem;
     padding: 1rem;
   }
@@ -226,14 +342,19 @@
     flex-basis: 800px;
     flex-grow: 4;
     flex-shrink: 1;
+    width: 100%;
     min-width: 460px;
+    padding: 16px;
+    max-height: calc(100vh - 5.2rem);
   }
   .box-3 {
     /* max-width: 300px; */
-    flex-basis: 270px;
-    flex-grow: 0;
-    flex-shrink: 4;
+    /* flex-basis: 270px; */
+    flex-basis: 70px;
+    /* flex-grow: 4; */
+    flex-shrink: 0;
     min-width: 5rem; /* aka 75px */
+    transition: all 0.4s ease-in-out;
   }
   @media (max-width: 900px) {
     .box-3 {
@@ -246,27 +367,17 @@
     padding: 1.2rem;
     border-radius: 1rem;
     /* background-image: linear-gradient(135deg, #b75fae, 40%, rgb(20, 20, 20)); */
-    background-image: linear-gradient(135deg, #b75fae, 48%, transparent);
-    /* gap: 6rem; */
-  }
-  .player-card .img {
-    height: 210px;
-    width: 210px;
+    background-image: linear-gradient(135deg, #884882, 48%, transparent);
+    gap: 1.8rem;
   }
   .cover-art {
     min-width: 210px;
-    width: 70%;
+    min-height: 210px;
+    /* width: 70%; */
+    aspect-ratio: 1;
     border-radius: 0.4rem;
     animation: fade-in 2s ease-in-out;
     box-shadow: 0px 4px 20px 4px rgba(0, 0, 0, 0.25);
-  }
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
   }
   .track-details {
     display: flex;
@@ -305,28 +416,14 @@
   .seek-bar-container {
     width: 100%;
   }
-  .slider-thumb {
-    opacity: 0;
-    animation: opacity 1s ease-in-out;
-  }
-  @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  .seek-bar-container:hover + .slider-thumb {
-    opacity: 1;
-  }
   .timestamp-container {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 6px;
+    margin-top: -2px;
+    /* margin-bottom: 2px; */
   }
   .timestamp {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
     color: #909090;
   }
@@ -335,5 +432,14 @@
     justify-content: center;
     align-items: center;
     gap: 1rem;
+  }
+  .sidebar-options {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    margin-top: -6px;
+  }
+  .sidebar-options > li {
+    padding: 0.6rem 0rem;
   }
 </style>

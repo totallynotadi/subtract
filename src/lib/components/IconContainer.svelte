@@ -1,11 +1,21 @@
 <script>
   export let icon;
-  export let size = "1rem";
+  export let iconSize = null;
+  export let containerSize = null;
   export let color = "white";
+  export let blur = false;
 </script>
 
-<div class="icon-circle" style="--size: {size}; --color: {color}">
-  <svelte:component this={icon} {size} {color} />
+<div
+  class="icon-circle {blur ? 'blur' : 'noblur'}"
+  style="--size: {containerSize ?? iconSize ?? '3.2rem'}; --color: {color}"
+>
+  <svelte:component
+    this={icon}
+    size={iconSize ?? "6rem"}
+    viewBox={"0 0.5 24 24"}
+    {color}
+  />
 </div>
 
 <style>
@@ -19,7 +29,8 @@
     height: var(--size);
     width: var(--size);
     padding: 0.6rem;
-    background-color: rgba(179, 179, 179, 0.12);
+    background-color: rgba(40, 40, 40, 0.7);
+    /* background-color: #171a1a; */
     border-radius: 50%;
 
     aspect-ratio: 1;
@@ -37,7 +48,7 @@
       linear-gradient(
         to bottom,
         rgba(179, 179, 179, 0.01),
-        rgba(179, 179, 179, 0.12)
+        rgba(50, 50, 50, 0.12)
       )
     );
     padding: var(--b);
@@ -47,5 +58,10 @@
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
+  }
+
+  .blur {
+    background-color: rgba(37, 37, 37, 0.7);
+    backdrop-filter: blur(60px) saturate(200%);
   }
 </style>

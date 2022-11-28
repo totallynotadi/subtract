@@ -5,4 +5,5 @@ import autoPreprocess from "svelte-preprocess";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [svelte({ preprocess: autoPreprocess() })],
+  optimizeDeps: { exclude: ["svelte-navigator"] },
 });
