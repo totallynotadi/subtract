@@ -3,16 +3,19 @@
   export let iconSize = null;
   export let containerSize = null;
   export let color = "white";
+  export let containerColor = "rgba(40, 40, 40, 0.7)";
   export let blur = false;
 </script>
 
 <div
   class="icon-circle {blur ? 'blur' : 'noblur'}"
-  style="--size: {containerSize ?? iconSize ?? '3.2rem'}; --color: {color}"
+  style="--size: {containerSize ??
+    iconSize ??
+    '3.2rem'}; --container-color: {containerColor}"
 >
   <svelte:component
     this={icon}
-    size={iconSize ?? "6rem"}
+    size={iconSize ?? "84px"}
     viewBox={"0 0.5 24 24"}
     {color}
   />
@@ -30,6 +33,7 @@
     width: var(--size);
     padding: 0.6rem;
     background-color: rgba(40, 40, 40, 0.7);
+    /* background-color: var(--container-color); */
     /* background-color: #171a1a; */
     border-radius: 50%;
 
@@ -61,7 +65,8 @@
   }
 
   .blur {
-    background-color: rgba(37, 37, 37, 0.7);
-    backdrop-filter: blur(60px) saturate(200%);
+    /* background-color: rgba(37, 37, 37, 0.6); */
+    background-color: var(--container-color);
+    backdrop-filter: blur(20px) saturate(200%);
   }
 </style>

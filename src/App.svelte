@@ -75,7 +75,8 @@
       seekBarThumbElement.style.inlineSize = "10px";
 
       seekBarThumbElement.style.opacity = "0";
-      seekBarThumbElement.style.transition = "opacity 0.1s ease-in-out";
+      seekBarThumbElement.style.transition =
+        "opacity 0.1s cubic-bezier(0.42, 0, 0.58, 1)";
 
       seekBarContainerElement.onmouseover = function (e) {
         seekBarThumbElement.style.opacity = "1";
@@ -91,8 +92,12 @@
   const wait = () => new Promise((res) => setTimeout(res, 0 * 1000));
 
   let boxWidth = window.innerWidth - 32;
-  let columnGap = 18;
-  $: columnCount = Math.round(boxWidth / 230);
+  $: boxWidth = boxWidth - 32;
+  $: boxWidth = boxWidth - 20;
+  let columnGap = 20;
+  $: columnCount = Math.round(boxWidth / 220);
+  $: gapBlocks = columnGap * (columnCount - 1);
+  $: columnWidth = Math.round((boxWidth - gapBlocks) / columnCount) - 1;
 </script>
 
 {#await wait()}
@@ -102,7 +107,7 @@
     <div class="scaffold">
       <div class="column">
         <div class="h-top-bar w-100">
-          <div class="row">
+          <div class="row" style="max-height:calc(100vh - 5rem);">
             <img
               src={logo}
               alt="S U B T R A C T"
@@ -140,7 +145,7 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" style="max-height:calc(100vh - 5.2rem);">
           <div class="column box-1">
             <div
               class="container border-rad icon-box-circle"
@@ -171,10 +176,18 @@
               </ul>
             </div>
             <div
-              class="container border-rad icon-box-circle"
-              style="background-color: #181a1b; background-image: none; height:fit-content; flex: 0 0 fit-content"
+              class="container border-rad icon-box-circle stack"
+              style="overflow: hidden; height:fit-content; flex: 0 0 fit-content"
             >
-              <div class="column player-card">
+              <img
+                src="https://i.scdn.co/image/ab67616d0000b273f6ace12946d9796dc0cdd533"
+                width="210"
+                height="210"
+                alt="L M A O"
+                class="cover-art stack-item image-beneath"
+                defer
+              />
+              <div class="stack-item column player-card">
                 <img
                   src="https://i.scdn.co/image/ab67616d0000b273f6ace12946d9796dc0cdd533"
                   width="210"
@@ -227,7 +240,7 @@
             bind:clientWidth={boxWidth}
           >
             <Route>
-              <HomeScreen bind:columnCount bind:columnGap />
+              <HomeScreen bind:columnCount bind:columnGap bind:columnWidth />
             </Route>
             <Route path="library">
               <LibraryScreen />
@@ -336,7 +349,9 @@
     flex-basis: 300px;
     flex-grow: 0.4;
     flex-shrink: 0.5;
-    min-width: 240px;
+    min-width: 264px;
+    /* min-width: 16vw; */
+    max-width: 14vw;
   }
   .box-2 {
     flex-basis: 800px;
@@ -345,7 +360,6 @@
     width: 100%;
     min-width: 460px;
     padding: 16px;
-    max-height: calc(100vh - 5.2rem);
   }
   .box-3 {
     /* max-width: 300px; */
@@ -354,7 +368,8 @@
     /* flex-grow: 4; */
     flex-shrink: 0;
     min-width: 5rem; /* aka 75px */
-    transition: all 0.4s ease-in-out;
+    height: 100%;
+    transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
   }
   @media (max-width: 900px) {
     .box-3 {
@@ -364,19 +379,24 @@
   }
   .player-card {
     /* justify-content: space-between; */
-    padding: 1.2rem;
+    padding: 1rem 1rem;
     border-radius: 1rem;
     /* background-image: linear-gradient(135deg, #b75fae, 40%, rgb(20, 20, 20)); */
-    background-image: linear-gradient(135deg, #884882, 48%, transparent);
-    gap: 1.8rem;
+    /* background-image: linear-gradient(135deg, #884882, 48%, transparent); */
+    background-color: rgba(40, 40, 40, 0.6);
+    /* background-color: transparent; */
+    backdrop-filter: blur(60px) saturate(200%);
+    gap: 1.4rem;
   }
   .cover-art {
     min-width: 210px;
-    min-height: 210px;
+    width: 100%;
+    height: 100%;
+    /* min-height: 210px; */
     /* width: 70%; */
-    aspect-ratio: 1;
-    border-radius: 0.4rem;
-    animation: fade-in 2s ease-in-out;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    animation: fade-in 2s cubic-bezier(0.42, 0, 0.58, 1);
     box-shadow: 0px 4px 20px 4px rgba(0, 0, 0, 0.25);
   }
   .track-details {
@@ -415,17 +435,21 @@
   }
   .seek-bar-container {
     width: 100%;
+    padding: 0px 0px;
+    margin-top: -4px;
   }
   .timestamp-container {
     display: flex;
     justify-content: space-between;
-    margin-top: -2px;
-    /* margin-bottom: 2px; */
+    margin-top: -6px;
+    margin-bottom: 2px;
   }
   .timestamp {
-    font-size: 12px;
+    font-size: 10px;
+    letter-spacing: 1px;
     font-weight: bold;
-    color: #909090;
+    /* color: #909090; */
+    color: rgb(153, 153, 153);
   }
   .controls-container {
     display: flex;
@@ -437,9 +461,16 @@
     display: flex;
     flex-direction: column;
     padding: 2rem;
-    margin-top: -6px;
+    margin-top: -9px;
   }
   .sidebar-options > li {
     padding: 0.6rem 0rem;
+  }
+  .image-beneath {
+    height: 70%;
+    width: 88%;
+    filter: blur(260px) saturate(200%) brightness(1.5);
+    /* transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1); */
+    left: 4rem;
   }
 </style>

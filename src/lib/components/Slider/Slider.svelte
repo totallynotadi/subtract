@@ -365,6 +365,7 @@
   }
   .slider-track {
     background-color: var(--fds-accent-default);
+    transition: none;
   }
   .slider-tick-bar {
     height: 100%;
@@ -392,10 +393,10 @@
   .slider-thumb {
     align-items: center;
     background-color: var(--fds-control-solid-fill-default);
-    block-size: 20px;
+    block-size: 10px;
     box-shadow: 0 0 0 1px var(--fds-control-stroke-default);
     display: flex;
-    inline-size: 20px;
+    inline-size: 10px;
     justify-content: center;
     z-index: 10;
   }
