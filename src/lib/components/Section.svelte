@@ -6,6 +6,8 @@
   // export let sectionId = "";
   export let sectionData = {};
   export let sectionDimensions = {};
+  // $: sectionData = () => {return {}}()
+
   // export let columnCount = 2;
   // export let columnGap = 12;
   // export let columnWidth = 195;
@@ -46,16 +48,18 @@
             <Card bind:prefferedWdith={columnWidth} />
             <Card bind:prefferedWdith={columnWidth} />
             <Card bind:prefferedWdith={columnWidth} /> -->
-            <Card
-              cardData={card}
-              bind:prefferedWdith={sectionDimensions.columnWidth}
-            />
+            {#if card.content.__typename !== "UnknownType"}
+              <Card
+                cardData={card}
+                bind:prefferedWdith={sectionDimensions.columnWidth}
+              />
+            {/if}
           {/each}
         </div>
       </div>
     </div>
   </Route>
-
+  <Route path="playlist/*playlistId" let:params>dinesh</Route>
   <!-- <Route path="section/:id" let:params>
     <SectionPage sectionId={params.sectionId} />
   </Route> -->

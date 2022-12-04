@@ -311,6 +311,7 @@
   }
 
   .h-top-bar {
+    margin-top: 1px;
     height: 3rem;
   }
   .w-100 {
@@ -358,7 +359,7 @@
     flex-grow: 4;
     flex-shrink: 1;
     width: 100%;
-    min-width: 460px;
+    min-width: 400px;
     padding: 16px;
   }
   .box-3 {
@@ -370,12 +371,6 @@
     min-width: 5rem; /* aka 75px */
     height: 100%;
     transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
-  }
-  @media (max-width: 900px) {
-    .box-3 {
-      opacity: 0;
-      display: none;
-    }
   }
   .player-card {
     /* justify-content: space-between; */

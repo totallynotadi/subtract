@@ -2,80 +2,109 @@
   import IconContainer from "./IconContainer.svelte";
   import Play from "svelte-material-icons/Play.svelte";
   import DotsHorizontal from "svelte-material-icons/DotsHorizontal.svelte";
+  import { Router, Route, Link } from "svelte-navigator";
 
   export let prefferedWdith = null;
   export let cardData = {};
 </script>
 
-<div>
-  <div
-    class="stack stack-beneath"
-    style="--preferred-width:{prefferedWdith ? prefferedWdith + 'px' : '100%'}"
-  >
-    <img
-      src={cardData.content.__typename == "EpisodeOrChapterResponseWrapper"
-        ? cardData.content.data.coverArt.sources[1].url
-        : cardData.content.data.images.items[0].sources[0].url}
-      width="100%"
-      alt=""
-      id="image-beneath"
-      class="stack-item image-beneath"
-      rel="prefetch"
-    />
-    <div
-      class="card stack-item"
-      on:mouseenter={function (e) {
-        // e.target.firstChild.style.boxShadow = "none";
-        e.target.firstChild.lastElementChild.style.opacity = "1";
-        e.target.lastElementChild.style.color = "white";
-        e.target.lastElementChild.style.fontWeight = "600";
-        e.target.parentNode.firstChild.style.opacity = "1";
-        e.target.style.backgroundColor = "rgb(40, 40, 40, 0.42)";
-      }}
-      on:mouseleave={async function (e) {
-        e.target.parentNode.firstChild.style.opacity = "0";
-        e.target.lastElementChild.style.color = "var(--text-subdued)";
-        e.target.lastElementChild.style.fontWeight = "bold";
-        e.target.firstChild.lastElementChild.style.opacity = "0";
-        // e.target.firstChild.style.boxShadow = "0px 0px 38px 28px rgba(87, 87, 87, 0.6)";
-        e.target.style.backgroundColor = "transparent";
-      }}
+<Router>
+  <Route>
+    <Link
+      to="{cardData.uri.split(':')[1]}/{cardData.uri.split(':')[2]}"
+      style="text-decoration:none;color:white"
     >
-      <div class="stack no-transform">
-        <img
-          src={cardData.content.__typename == "EpisodeOrChapterResponseWrapper"
-            ? cardData.content.data.coverArt.sources[1].url
-            : cardData.content.data.images.items[0].sources[0].url}
-          width="100%"
-          alt=""
-          class="stack-item"
-          rel="prefetch"
-        />
-        <div class="stack-item card-overlay" style="">
-          <div class="fluid-container" />
-          <div class="row">
-            <div class="fluid-container" />
-            <IconContainer
-              icon={Play}
-              containerSize="2.6rem"
-              iconSize="22.4px"
-              blur={true}
-              containerColor={"rgba(40, 40, 40, 0.7)"}
-            />
-            <!-- <IconContainer
+      <div>
+        <div
+          class="stack stack-beneath"
+          style="--preferred-width:{prefferedWdith
+            ? prefferedWdith + 'px'
+            : '100%'}"
+        >
+          <img
+            src={cardData.content.__typename ==
+              "EpisodeOrChapterResponseWrapper" ||
+            cardData.content.__typename == "PodcastOrAudiobookResponseWrapper"
+              ? cardData.content.data.coverArt.sources[1].url
+              : cardData.content.__typename == "AlbumResponseWrapper"
+              ? cardData.content.data.coverArt.sources[1].url
+              : cardData.content.__typename == "ArtistResponseWrapper"
+              ? cardData.content.data.visuals.avatarImage.sources[0].url
+              : cardData.content.__typename == "PlaylistResponseWrapper"
+              ? cardData.content.data.images.items[0].sources[0].url
+              : console.log(cardData)}
+            width="100%"
+            alt=""
+            id="image-beneath"
+            class="stack-item image-beneath"
+            rel="prefetch"
+          />
+          <div
+            class="card stack-item"
+            on:mouseenter={function (e) {
+              // e.target.firstChild.style.boxShadow = "none";
+              e.target.style.backgroundColor = "rgb(40, 40, 40, 0.42)";
+              e.target.firstChild.lastElementChild.style.opacity = "1";
+              e.target.lastElementChild.style.color = "white";
+              e.target.lastElementChild.style.fontWeight = "600";
+              e.target.parentNode.firstChild.style.opacity = "1";
+            }}
+            on:mouseleave={async function (e) {
+              // e.target.firstChild.style.boxShadow = "0px 0px 38px 28px rgba(87, 87, 87, 0.6)";
+              e.target.style.backgroundColor = "transparent";
+              e.target.firstChild.lastElementChild.style.opacity = "0";
+              e.target.lastElementChild.style.color = "var(--text-subdued)";
+              e.target.lastElementChild.style.fontWeight = "bold";
+              e.target.parentNode.firstChild.style.opacity = "0";
+            }}
+          >
+            <div class="stack no-transform">
+              <div class="stack-item image-box">
+                <img
+                  src={cardData.content.__typename ==
+                    "EpisodeOrChapterResponseWrapper" ||
+                  cardData.content.__typename ==
+                    "PodcastOrAudiobookResponseWrapper"
+                    ? cardData.content.data.coverArt.sources[1].url
+                    : cardData.content.__typename == "AlbumResponseWrapper"
+                    ? cardData.content.data.coverArt.sources[0].url
+                    : cardData.content.__typename == "ArtistResponseWrapper"
+                    ? cardData.content.data.visuals.avatarImage.sources[0].url
+                    : cardData.content.data.images.items[0].sources[0].url}
+                  width="100%"
+                  alt=""
+                  rel="prefetch"
+                />
+              </div>
+              <div class="stack-item card-overlay" style="">
+                <div class="fluid-container" />
+                <div class="row">
+                  <div class="fluid-container" />
+                  <IconContainer
+                    icon={Play}
+                    containerSize="2.6rem"
+                    iconSize="22.4px"
+                    blur={true}
+                    containerColor={"rgba(40, 40, 40, 0.7)"}
+                  />
+                  <!-- <IconContainer
               icon={DotsHorizontal}
               containerSize="2.6rem"
               iconSize="22.4px"
               blur={true}
             /> -->
-          </div>
-        </div>
-      </div>
+                </div>
+              </div>
+            </div>
 
-      <!-- {console.log(cardData.content)} -->
-      {#if !!cardData.content.data}
-        <div class="title">{cardData.content.data.name}</div>
-        <!-- {#if cardData.content.data.description != "undefined"}
+            <!-- {console.log(cardData.content)} -->
+            {#if !!cardData.content.data}
+              <div class="title">
+                {cardData.content.data.name
+                  ? cardData.content.data.name
+                  : cardData.content.data.profile.name}
+              </div>
+              <!-- {#if cardData.content.data.description != "undefined"}
           <div class="description">{cardData.content.data.description}</div>
         {:else if cardData.content.data.description == "undefined" || cardData.content.data.description == null}
           <div class="description">
@@ -83,28 +112,40 @@
             {cardData.content.data.name}
           </div>
         {/if} -->
-        {#if cardData.content.__typename == "PlaylistResponseWrapper"}
-          {#if cardData.content.data.description !== ""}
-            <div class="description">
-              {@html cardData.content.data.description}
-            </div>
-          {:else}
-            <div class="description">
-              by
-              {cardData.content.data.ownerV2.data.name
-                .padStart(18, " ")
-                .padEnd(18, " ")}
-            </div>
-          {/if}
-        {:else if cardData.content.__typename == "EpisodeOrChapterResponseWrapper"}
-          <div class="description">
-            {@html cardData.content.data.description}
+              {#if cardData.content.__typename == "PlaylistResponseWrapper"}
+                {#if cardData.content.data.description !== ""}
+                  <div class="description">
+                    {@html cardData.content.data.description}
+                  </div>
+                {:else}
+                  <div class="description">
+                    by
+                    {cardData.content.data.ownerV2.data.name
+                      .padStart(18, " ")
+                      .padEnd(18, " ")}
+                  </div>
+                {/if}
+              {:else if cardData.content.__typename == "EpisodeOrChapterResponseWrapper" || cardData.content.__typename == "PodcastOrAudiobookResponseWrapper"}
+                <div class="description">
+                  {@html typeof cardData.content.data.description !==
+                  "undefined"
+                    ? cardData.content.data.description
+                    : cardData.content.data.publisher.name}
+                </div>
+              {:else if cardData.content.__typename == "ArtistResponseWrapper"}
+                <div class="description">Artist</div>
+              {:else if cardData.content.__typename == "AlbumResponseWrapper"}
+                <div class="description">
+                  {cardData.content.data.artists.items[0].profile.name}
+                </div>
+              {/if}
+            {/if}
           </div>
-        {/if}
-      {/if}
-    </div>
-  </div>
-</div>
+        </div>
+      </div>
+    </Link>
+  </Route>
+</Router>
 
 <style>
   .stack {
@@ -157,7 +198,7 @@
     /* object-position: center; */
     border-radius: 6px;
     /* box-shadow: rgb(74, 74, 74) 0px 7px 29px 0px; */
-    box-shadow: 0px 0px 16px 3px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 0px 16px 2.6px rgba(0, 0, 0, 0.26);
   }
 
   .title {
@@ -211,5 +252,15 @@
   .stack-beneath {
     width: var(--preferred-width);
     height: 100%;
+  }
+  .image-box {
+    width: 100%;
+    height: calc(var(--preferred-width) - 28px);
+  }
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center center;
   }
 </style>

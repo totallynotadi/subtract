@@ -31,11 +31,14 @@
         <div class="home-page-welcome-text">
           {data.greeting.text}
         </div>
+        <!-- {data.sectionContainer.sections.items.forEach((section) =>
+          console.log(section)
+        )} -->
         <!-- {console.log(data.sectionContainer.sections.items.slice(1))} -->
         <!-- {#each data.sectionContainer.sections.items.slice(1) as section} -->
         {#each data.sectionContainer.sections.items as section}
           {#if section.data.__typename !== "HomeShortsSectionData"}
-            <Section sectionData={section} {sectionDimensions} />
+            <Section bind:sectionData={section} {sectionDimensions} />
           {/if}
         {/each}
       </div>
@@ -47,6 +50,7 @@
         sectionId={params.sectionId}
       />
     </Route>
+    <Route path="playlist/*playlistId" let:params>dinesh</Route>
   </Router>
 {/await}
 

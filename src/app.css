@@ -44,6 +44,24 @@ a {
   text-decoration: none;
   color: var(--text-subdued);
 }
+.image-beneath {
+  animation: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  img {
+    animation: fadeInAnimation 2s cubic-bezier(0.42, 0, 0.58, 1);
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+  }
+}
+@keyframes fadeInAnimation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 
 .icon-circle {
   --b: 2px; /* border width*/
