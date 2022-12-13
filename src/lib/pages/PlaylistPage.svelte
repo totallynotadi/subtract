@@ -252,14 +252,14 @@
   .track-list {
     width: 100%;
     height: 100%;
-    gap: 1.4rem;
-    padding: 1rem 1.6rem;
+    gap: 0.4rem;
+    padding: 1rem 0.2rem;
     /* margin-top: 2rem; */
     overflow: scroll;
-    -webkit-mask-image: linear-gradient(to top, black 96%, transparent);
-    mask-image: linear-gradient(to top, rgb(0, 0, 0) 96%, transparent);
+    -webkit-mask-image: linear-gradient(to top, black 97%, transparent);
+    mask-image: linear-gradient(to top, rgb(0, 0, 0) 97%, transparent);
   }
-  @media (max-width: 822px) {
+  @media (max-width: 824px) {
     .actions-container {
       display: flex;
       justify-content: space-between;
@@ -270,12 +270,12 @@
     .track-list {
       width: 100%;
       height: 100%;
-      gap: 1.4rem;
-      padding: 1rem 0.4rem 1rem 0.8rem;
+      gap: 1.2rem;
+      padding: 0.8rem 0.2rem 0.8rem 0.2rem;
       /* margin-top: 2rem; */
       overflow: scroll;
-      -webkit-mask-image: linear-gradient(to top, black 96%, transparent);
-      mask-image: linear-gradient(to top, rgb(0, 0, 0) 96%, transparent);
+      -webkit-mask-image: linear-gradient(to top, black 97%, transparent);
+      mask-image: linear-gradient(to top, rgb(0, 0, 0) 97%, transparent);
     }
   }
 </style>

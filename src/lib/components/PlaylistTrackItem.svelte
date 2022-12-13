@@ -60,7 +60,22 @@
     height: max-content;
     justify-content: space-between;
     align-items: center;
+    padding: 0.8rem 1.4rem 0.8rem 1.4rem;
     gap: 2rem;
+    border-radius: 12px;
+    transition: background-color 0.1s ease-in-out;
+  }
+  @media (max-width: 824px) {
+    .item-container {
+      width: 100%;
+      height: max-content;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 0.4rem 0.8rem 0.8rem;
+      gap: 2rem;
+      border-radius: 12px;
+      transition: all 0.1s ease-in-out;
+    }
   }
   .left-align-data,
   .right-align-data {
@@ -111,5 +126,9 @@
   }
   .item-container:hover .icon {
     opacity: 1;
+  }
+  .item-container:hover {
+    background-color: #2a2a2a;
+    outline: 2px solid #373737;
   }
 </style>
