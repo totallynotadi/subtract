@@ -12,6 +12,7 @@
   };
   import { Router, Route, Link } from "svelte-navigator";
   import Section from "../components/Section.svelte";
+  import PlaylistPage from "./PlaylistPage.svelte";
   import SectionPage from "./SectionPage.svelte";
 
   const getHomePage = (async () => {
@@ -50,7 +51,13 @@
         sectionId={params.sectionId}
       />
     </Route>
-    <Route path="playlist/*playlistId" let:params>dinesh</Route>
+    <Route path="playlist/*playlistId" let:params
+      ><PlaylistPage playlistId={params.playlistId} /></Route
+    >
+    <Route path="show/*showId" let:params>show</Route>
+    <Route path="episode/*episodeId" let:params>episode</Route>
+    <Route path="artist/*artistId" let:params>artist</Route>
+    <Route path="album/*albumId" let:params>album</Route>
   </Router>
 {/await}
 
@@ -70,6 +77,7 @@
     text-transform: capitalize;
     font-weight: bold;
 
+    margin-top: 1rem;
     margin-bottom: 2rem;
   }
 </style>

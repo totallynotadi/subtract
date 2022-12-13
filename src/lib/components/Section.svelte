@@ -48,7 +48,7 @@
             <Card bind:prefferedWdith={columnWidth} />
             <Card bind:prefferedWdith={columnWidth} />
             <Card bind:prefferedWdith={columnWidth} /> -->
-            {#if card.content.__typename !== "UnknownType"}
+            {#if card.content.__typename !== "UnknownType" || typeof card.content.data !== "undefined" ? card.content.data.__typename !== "GenericError" : true}
               <Card
                 cardData={card}
                 bind:prefferedWdith={sectionDimensions.columnWidth}
@@ -59,7 +59,7 @@
       </div>
     </div>
   </Route>
-  <Route path="playlist/*playlistId" let:params>dinesh</Route>
+  <!-- <Route path="playlist/*playlistId" let:params>dinesh</Route> -->
   <!-- <Route path="section/:id" let:params>
     <SectionPage sectionId={params.sectionId} />
   </Route> -->

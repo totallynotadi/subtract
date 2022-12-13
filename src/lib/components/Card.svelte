@@ -14,7 +14,7 @@
       to="{cardData.uri.split(':')[1]}/{cardData.uri.split(':')[2]}"
       style="text-decoration:none;color:white"
     >
-      <div>
+      <div style="height:100%;">
         <div
           class="stack stack-beneath"
           style="--preferred-width:{prefferedWdith
@@ -24,10 +24,12 @@
           <img
             src={cardData.content.__typename ==
               "EpisodeOrChapterResponseWrapper" ||
-            cardData.content.__typename == "PodcastOrAudiobookResponseWrapper"
-              ? cardData.content.data.coverArt.sources[1].url
-              : cardData.content.__typename == "AlbumResponseWrapper"
-              ? cardData.content.data.coverArt.sources[1].url
+            cardData.content.__typename ==
+              "PodcastOrAudiobookResponseWrapper" ||
+            cardData.content.__typename == "AlbumResponseWrapper"
+              ? typeof cardData.content.data.coverArt !== "undefined"
+                ? cardData.content.data.coverArt.sources[1].url
+                : "undefined"
               : cardData.content.__typename == "ArtistResponseWrapper"
               ? cardData.content.data.visuals.avatarImage.sources[0].url
               : cardData.content.__typename == "PlaylistResponseWrapper"
@@ -64,13 +66,16 @@
                   src={cardData.content.__typename ==
                     "EpisodeOrChapterResponseWrapper" ||
                   cardData.content.__typename ==
-                    "PodcastOrAudiobookResponseWrapper"
-                    ? cardData.content.data.coverArt.sources[1].url
-                    : cardData.content.__typename == "AlbumResponseWrapper"
-                    ? cardData.content.data.coverArt.sources[0].url
+                    "PodcastOrAudiobookResponseWrapper" ||
+                  cardData.content.__typename == "AlbumResponseWrapper"
+                    ? typeof cardData.content.data.coverArt !== "undefined"
+                      ? cardData.content.data.coverArt.sources[1].url
+                      : "undefined"
                     : cardData.content.__typename == "ArtistResponseWrapper"
                     ? cardData.content.data.visuals.avatarImage.sources[0].url
-                    : cardData.content.data.images.items[0].sources[0].url}
+                    : cardData.content.__typename == "PlaylistResponseWrapper"
+                    ? cardData.content.data.images.items[0].sources[0].url
+                    : console.log(cardData)}
                   width="100%"
                   alt=""
                   rel="prefetch"
@@ -102,7 +107,9 @@
               <div class="title">
                 {cardData.content.data.name
                   ? cardData.content.data.name
-                  : cardData.content.data.profile.name}
+                  : typeof cardData.content.data.profile !== "undefined"
+                  ? cardData.content.data.profile.name
+                  : "error"}
               </div>
               <!-- {#if cardData.content.data.description != "undefined"}
           <div class="description">{cardData.content.data.description}</div>
@@ -120,9 +127,7 @@
                 {:else}
                   <div class="description">
                     by
-                    {cardData.content.data.ownerV2.data.name
-                      .padStart(18, " ")
-                      .padEnd(18, " ")}
+                    {cardData.content.data.ownerV2.data.name}
                   </div>
                 {/if}
               {:else if cardData.content.__typename == "EpisodeOrChapterResponseWrapper" || cardData.content.__typename == "PodcastOrAudiobookResponseWrapper"}
@@ -130,7 +135,9 @@
                   {@html typeof cardData.content.data.description !==
                   "undefined"
                     ? cardData.content.data.description
-                    : cardData.content.data.publisher.name}
+                    : typeof cardData.content.data.publisher !== "undefined"
+                    ? cardData.content.data.publisher.name
+                    : "errorlol"}
                 </div>
               {:else if cardData.content.__typename == "ArtistResponseWrapper"}
                 <div class="description">Artist</div>
@@ -154,7 +161,8 @@
     border-radius: 8px;
   }
   .image-beneath {
-    filter: blur(60px) brightness(1.125) saturate(200%);
+    filter: blur(60px) brightness(1.125) saturate(160%) contrast(0.9)
+      opacity(0.9);
 
     transform: scale(1.3);
     transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
@@ -199,6 +207,7 @@
     border-radius: 6px;
     /* box-shadow: rgb(74, 74, 74) 0px 7px 29px 0px; */
     box-shadow: 0px 0px 16px 2.6px rgba(0, 0, 0, 0.26);
+    width: 100%;
   }
 
   .title {

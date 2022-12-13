@@ -11,6 +11,7 @@
   import Next from "svelte-material-icons/SkipNext.svelte";
   import Shuffle from "svelte-material-icons/Shuffle.svelte";
   import Repeat from "svelte-material-icons/Repeat.svelte";
+  import ArrowLeft from "svelte-material-icons/ArrowLeft.svelte";
 
   import MusicBoxMultiple from "svelte-material-icons/MusicBoxMultiple.svelte";
   import Bookshelf from "svelte-material-icons/Bookshelf.svelte";
@@ -95,7 +96,7 @@
   $: boxWidth = boxWidth - 32;
   $: boxWidth = boxWidth - 20;
   let columnGap = 20;
-  $: columnCount = Math.round(boxWidth / 220);
+  $: columnCount = Math.round(boxWidth / 196);
   $: gapBlocks = columnGap * (columnCount - 1);
   $: columnWidth = Math.round((boxWidth - gapBlocks) / columnCount) - 1;
 </script>
@@ -253,16 +254,36 @@
             </Route>
           </div>
           <div id="box-3" class="box-3 container border-rad icon-box-circle">
-            <button
-              style="border:none; background-color:rgba(50, 50, 50, 0.5); border-radius:50%; width:2rem; height:2rem;"
-              on:click={function () {
-                let sidebar = document.getElementById("box-3");
-                sidebar.style.flexBasis =
-                  sidebar.style.flexBasis == "70px" ? "240px" : "70px";
-              }}
-            >
-              ←
-            </button>
+            <div class="button-container">
+              <button
+                style="border:none;background-color:rgba(50, 50, 50, 0.5);border-radius:50%;width:2.2rem;height:2.2rem;"
+                on:click={function (e) {
+                  console.log(e.target.style.transform, "");
+                  let sidebar = document.getElementById("box-3");
+                  e.target.parentElement.style.width =
+                    e.target.parentElement.style.width == "" ||
+                    e.target.parentElement.style.width == "100%"
+                      ? "2.2rem"
+                      : "100%";
+                  sidebar.style.flexBasis =
+                    sidebar.style.flexBasis == "70px" ||
+                    sidebar.style.flexBasis == ""
+                      ? "240px"
+                      : "70px";
+                  e.target.style.transform =
+                    e.target.style.transform == "rotate(180deg)"
+                      ? "rotate(0deg)"
+                      : e.target.style.transform == "rotate(0deg)" ||
+                        e.target.style.transform == ""
+                      ? "rotate(180deg)"
+                      : "";
+                }}
+              >
+                <div style="pointer-events: none">
+                  <ArrowLeft size="1.2rem" viewBox="0 -2 24 24" />
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -347,30 +368,36 @@
     border-radius: 1rem;
   }
   .box-1 {
-    flex-basis: 300px;
-    flex-grow: 0.4;
-    flex-shrink: 0.5;
-    min-width: 264px;
+    /* flex-basis: 300px; */
+    flex-basis: 250px;
+    /* flex-grow: 0.4; */
+    /* flex-shrink: 0.5; */
+    min-width: 250px;
     /* min-width: 16vw; */
-    max-width: 14vw;
+    /* max-width: 14vw; */
   }
   .box-2 {
     flex-basis: 800px;
     flex-grow: 4;
     flex-shrink: 1;
     width: 100%;
-    min-width: 400px;
+    min-width: 428px;
     padding: 16px;
   }
   .box-3 {
     /* max-width: 300px; */
     /* flex-basis: 270px; */
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: flex-start;
     flex-basis: 70px;
-    /* flex-grow: 4; */
+    flex-grow: 0;
     flex-shrink: 0;
     min-width: 5rem; /* aka 75px */
     height: 100%;
     transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1);
+    padding: 1rem 1rem;
   }
   .player-card {
     /* justify-content: space-between; */
@@ -384,7 +411,7 @@
     gap: 1.4rem;
   }
   .cover-art {
-    min-width: 210px;
+    /* min-width: 210px; */
     width: 100%;
     height: 100%;
     /* min-height: 210px; */
@@ -415,8 +442,8 @@
     width: 100%;
     overflow: hidden;
 
-    -webkit-mask-image: linear-gradient(to right, black, transparent);
-    mask-image: linear-gradient(to right, black 80%, transparent);
+    -webkit-mask-image: linear-gradient(to right, black 86%, transparent);
+    mask-image: linear-gradient(to right, black 86%, transparent);
   }
   .track-artists {
     letter-spacing: 0.4px;
@@ -467,5 +494,11 @@
     filter: blur(260px) saturate(200%) brightness(1.5);
     /* transition: all 0.2s cubic-bezier(0.42, 0, 0.58, 1); */
     left: 4rem;
+  }
+  .button-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 </style>

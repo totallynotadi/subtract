@@ -14,7 +14,7 @@
   >
     <svelte:component
       this={icon}
-      size={"2rem"}
+      size={"1.6rem"}
       viewBox={"0 1 24 24"}
       color={$currentPath.includes("/" + linkTo) ? "white" : "#a7a7a7"}
     />

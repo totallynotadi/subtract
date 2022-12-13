@@ -10,7 +10,7 @@
 * {
   color: #cacaca;
   box-sizing: border-box;
-  font-family: "inter", sans-serif;
+  font-family: "inter", sans-serif, helvetica, arial;
   font-smooth: always;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -40,9 +40,14 @@ html {
   /* background-image: linear-gradient(to bottom, #181a1b, #121212, #0B0B0B); */
   /* background-color: #181a1b; */
 }
-a {
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
   text-decoration: none;
-  color: var(--text-subdued);
+  /* color: var(--text-subdued); */
+  /* color: white; */
 }
 .image-beneath {
   animation: none;
@@ -108,7 +113,7 @@ a {
   color: var(--color);
 
   /* background-color: rgba(99, 99, 99, 0.12); */
-  background-color: rgba(40, 40, 40, 0.7);
+  background-color: rgba(26, 26, 26, 0.7);
   /* background-color: #171a1a; */
   /* background-color: rgb(24, 24, 24); */
   backdrop-filter: blur(60px) saturate(210%);
