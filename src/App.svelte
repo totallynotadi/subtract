@@ -37,6 +37,7 @@
   import { currentPath } from "./lib/stores.js";
   import { onDestroy, onMount } from "svelte";
   import { globalHistory } from "svelte-navigator/src/history";
+  import { YTMUSIC } from "./lib/dist/index";
 
   let unsub;
 
@@ -59,12 +60,8 @@
   let seekBarThumbElement = null;
   let seekBarContainerElement = null;
 
-  let seekBarValue = 20;
-
-  let playerState = true;
-
   $: {
-    console.log(seekBarValue);
+    // console.log(seekBarValue);
 
     if (seekBarTrackColorNeedsSet && seekBarTrackElement != null) {
       seekBarTrackElement.style.backgroundColor = "#cacaca";
@@ -91,14 +88,61 @@
     }
   }
   const wait = () => new Promise((res) => setTimeout(res, 0 * 1000));
+  const ytmusic = new YTMUSIC(
+    "LOGIN_INFO=AFmmF2swRAIgHSN980c9f8lkxpke8TdftmbblS4jZ7yTp1YTiR4DLvsCICKFB1SIMxehNygfMgnGc1YN6vED-kFyi8MzTWG0SyfM:QUQ3MjNmejk0emRXVURCMmsyLXNxaGN2LUN3N2FfOVkyNHlDR3lDb0poVmhMV0xDMnVRQUdiaHlueWVkSTVNZHFNejY5SWdiVFJ6NTBNbGNuU2o3UXNjazRRMmVDYmlTZ3Zrc1pMZWF0ZE5oV0xzeWpFQXJKWHlHcXRESFIxQnAzX3VMT1FJOElUOHNFSHN5ZXZNaUNBMzk2TXB2U1YtLXNR; YSC=7NZkH35uUdQ; wide=1; HSID=AI_M8IY7E7RWA_FxK; SSID=Aikjc4x0AXFjIU73N; APISID=nSk22_50Ph91IMYc/A4ZCFosG1QlUrzzUC; SAPISID=Pc0lVJlIWy9ip6S4/AHsfXVbX0N_JY_vOj; __Secure-1PAPISID=Pc0lVJlIWy9ip6S4/AHsfXVbX0N_JY_vOj; __Secure-3PAPISID=Pc0lVJlIWy9ip6S4/AHsfXVbX0N_JY_vOj; VISITOR_INFO1_LIVE=uXbfIjvxy2w; SID=RwiVhLcZIlsHyquQPqUDBlMs1hJTAftNl307w2D3rd0R1ZM_UtMOw6s-cwrIC1p82s3Jwg.; __Secure-1PSID=RwiVhLcZIlsHyquQPqUDBlMs1hJTAftNl307w2D3rd0R1ZM_is5NhH6FuOcNs3MJ92bmnQ.; __Secure-3PSID=RwiVhLcZIlsHyquQPqUDBlMs1hJTAftNl307w2D3rd0R1ZM_Av1ZnsUKKHdto3BtkYFUkA.; PREF=tz=Asia.Calcutta&f6=40000000&f7=100&autoplay=true; SIDCC=AIKkIs2dLS9R3TsU0oGAcJzTgkpCza3FBnmXlQX9cueXRkAfTfdD0wae3mJCbDzuLpGT7Y1HDDA; __Secure-1PSIDCC=AIKkIs2Jr9qfXlr_hYBPYTZ-7ZGWmmfaSIOQwefB50XDaGsRo5eOHncuIQ1fbVN0X7kpXDXcww; __Secure-3PSIDCC=AIKkIs2xEnhnF8Ge7OrSgOdfvEIBrDIr2A02CMy51WOH8-f1IT7toP-KstL06dR4wNKkdQYQbE8"
+  );
+
+  let currentTimestamp = 0;
 
   let boxWidth = window.innerWidth - 32;
-  $: boxWidth = boxWidth - 32;
+  $: boxWidth = boxWidth - 32;  
   $: boxWidth = boxWidth - 20;
   let columnGap = 20;
   $: columnCount = Math.round(boxWidth / 196);
   $: gapBlocks = columnGap * (columnCount - 1);
   $: columnWidth = Math.round((boxWidth - gapBlocks) / columnCount) - 1;
+
+  const getPlaybackURL = async (trackId) => {
+    // const data = await fetch(
+    //   `https://spotify-endpoints.15adityagaikwad.repl.co/get-url/${trackId}`
+    // ).then((response) => response.json());
+    const name = await fetch(
+      `https://spotify-endpoints.15adityagaikwad.repl.co/name-from-id/${trackId}`
+    ).then((response) => response.json().name);
+    const data = await ytmusic.search(name);
+    console.log(data);
+    return data.url;
+  };
+
+  let player = {
+    audioPlayer: null,
+    currentlyPlaying: null,
+    queue: [],
+  };
+
+  const gotPlay = async (event) => {
+    // console.log(event.detail.track);
+    if (player.audioPlayer !== null) {
+      player.audioPlayer.pause();
+      player.audioPlayer.currentTime = 0;
+    }
+    player.currentlyPlaying = event.detail.track;
+    player.audioPlayer = new Audio(
+      await getPlaybackURL(event.detail.track.track.id)
+    );
+    player.audioPlayer.addEventListener("timeupdate", (e) => {
+      console.log(e);
+    });
+    if (typeof event.detail.queue !== "undefined") {
+      player.queue = event.detail.queue;
+    }
+    player.audioPlayer.play();
+    console.log(player);
+  };
+
+  $: player.audioPlayer !== null
+    ? console.log(player.audioPlayer.currentTime)
+    : "null";
 </script>
 
 {#await wait()}
@@ -176,72 +220,107 @@
                 </li>
               </ul>
             </div>
-            <div
-              class="container border-rad icon-box-circle stack"
-              style="overflow: hidden; height:fit-content; flex: 0 0 fit-content"
-            >
-              <img
-                src="https://i.scdn.co/image/ab67616d0000b273f6ace12946d9796dc0cdd533"
-                width="210"
-                height="210"
-                alt="L M A O"
-                class="cover-art stack-item image-beneath"
-                defer
-              />
-              <div class="stack-item column player-card">
+            {#if player.audioPlayer != null}
+              <div
+                class="container border-rad icon-box-circle stack"
+                style="overflow: hidden; height:fit-content; flex: 0 0 fit-content"
+              >
                 <img
-                  src="https://i.scdn.co/image/ab67616d0000b273f6ace12946d9796dc0cdd533"
+                  src={player.currentlyPlaying.track.album.images[0].url}
                   width="210"
                   height="210"
                   alt="L M A O"
-                  class="cover-art"
+                  class="cover-art stack-item image-beneath"
                   defer
                 />
-                <div class="track-details">
-                  <div class="track-artist-title">
-                    <div class="track-title">Sacrifice</div>
-                    <div class="track-artists">Alex, Tokyo Rose, The Akuma</div>
-                  </div>
-                  <div style="height: 1.2rem; width: 1.2rem;">
-                    <Favorite size="1.2rem" color="rgb(255, 255, 0)" />
-                  </div>
-                </div>
-                <div
-                  class="seek-bar-container"
-                  bind:this={seekBarContainerElement}
-                >
-                  <div class="controls-container">
-                    <Shuffle size="1.4rem" color="#aaaaaa" />
-                    <Previous size="1.8rem" color="#aaaaaa" />
-                    {#if playerState}
-                      <Play size="2.4rem" color="#aaaaaa" />
-                    {:else}
-                      <Pause size="2.4rem" color="#aaaaaa" />;
-                    {/if}
-                    <Next size="1.8rem" color="#aaaaaa" />
-                    <Repeat size="1.4rem" color="#aaaaaa" />
-                  </div>
-                  <Slider
-                    tooltip={false}
-                    bind:trackElement={seekBarTrackElement}
-                    bind:inputElement={seekBarInputElement}
-                    bind:thumbElement={seekBarThumbElement}
-                    bind:value={seekBarValue}
+                <div class="stack-item column player-card">
+                  <img
+                    src={player.currentlyPlaying.track.album.images[0].url}
+                    width="210"
+                    height="210"
+                    alt="L M A O"
+                    class="cover-art"
+                    defer
                   />
-                  <div class="timestamp-container">
-                    <div class="timestamp">1:34</div>
-                    <div class="timestamp">4:25</div>
+                  <div class="track-details">
+                    <div class="track-artist-title">
+                      <div class="track-title">
+                        {player.currentlyPlaying.track.name}
+                      </div>
+                      <div class="track-artists">
+                        {player.currentlyPlaying.track.artists
+                          .map((item) => item.name)
+                          .join(", ")}
+                      </div>
+                    </div>
+                    <div style="height: 1.2rem; width: 1.2rem;">
+                      <Favorite size="1.2rem" color="rgb(255, 255, 0)" />
+                    </div>
+                  </div>
+                  <div
+                    class="seek-bar-container"
+                    bind:this={seekBarContainerElement}
+                  >
+                    <div class="controls-container">
+                      <Shuffle size="1.4rem" color="#aaaaaa" />
+                      <Previous size="1.8rem" color="#aaaaaa" />
+                      {#if player.audioPlayer.paused}
+                        <div
+                          on:click={player.audioPlayer.play()}
+                          on:keypress={() => {}}
+                        >
+                          <Play
+                            size="2.4rem"
+                            color="#aaaaaa"
+                            on:click={player.audioPlayer.play()}
+                          />
+                        </div>
+                      {:else}
+                        <div
+                          on:click={player.audioPlayer.pause()}
+                          on:keypress={() => {}}
+                        >
+                          <Pause
+                            size="2.4rem"
+                            color="#aaaaaa"
+                            on:click={player.audioPlayer.pause()}
+                          />
+                        </div>
+                      {/if}
+                      <Next size="1.8rem" color="#aaaaaa" />
+                      <Repeat size="1.4rem" color="#aaaaaa" />
+                    </div>
+                    <Slider
+                      tooltip={false}
+                      bind:trackElement={seekBarTrackElement}
+                      bind:inputElement={seekBarInputElement}
+                      bind:thumbElement={seekBarThumbElement}
+                      min={0}
+                      max={Math.round(
+                        player.currentlyPlaying.track.duration_ms / 1000
+                      )}
+                      bind:value={player.audioPlayer.currentTime}
+                    />
+                    <div class="timestamp-container">
+                      <div class="timestamp">1:34</div>
+                      <div class="timestamp">4:25</div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            {/if}
           </div>
           <div
             class="box-2 container border-rad icon-box-circle"
             bind:clientWidth={boxWidth}
           >
             <Route>
-              <HomeScreen bind:columnCount bind:columnGap bind:columnWidth />
+              <HomeScreen
+                bind:columnCount
+                bind:columnGap
+                bind:columnWidth
+                on:play={gotPlay}
+              />
             </Route>
             <Route path="library">
               <LibraryScreen />
@@ -409,6 +488,15 @@
     /* background-color: transparent; */
     backdrop-filter: blur(60px) saturate(200%);
     gap: 1.4rem;
+    animation: fadeIn 0.2s ease-in-out;
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
   .cover-art {
     /* min-width: 210px; */
@@ -427,13 +515,19 @@
     justify-content: space-between;
     width: 96%;
     flex-shrink: 2;
-    /* margin-top: -4rem; */
+    margin: -3px 0rem;
   }
   .track-artist-title {
     width: calc(100% - 2rem);
     gap: 0.4rem;
     flex-flow: column;
     display: flex;
+
+    overflow: visible;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    /* text-overflow: ellipsis; */
   }
   .track-title {
     font-weight: bold;
@@ -444,6 +538,13 @@
 
     -webkit-mask-image: linear-gradient(to right, black 86%, transparent);
     mask-image: linear-gradient(to right, black 86%, transparent);
+
+    overflow: visible;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    /* text-overflow: ellipsis; */
+    margin-bottom: 4px;
   }
   .track-artists {
     letter-spacing: 0.4px;
@@ -454,6 +555,12 @@
 
     -webkit-mask-image: linear-gradient(to right, black, transparent);
     mask-image: linear-gradient(to right, black 80%, transparent);
+
+    overflow: visible;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    /* text-overflow: ellipsis; */
   }
   .seek-bar-container {
     width: 100%;

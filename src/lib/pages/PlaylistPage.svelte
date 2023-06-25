@@ -121,7 +121,7 @@
 
         <div class="track-list column">
           {#each data.tracks.items as item, idx}
-            <PlaylistTrackItem trackData={item} index={idx + 1} />
+            <PlaylistTrackItem trackData={item} index={idx + 1} on:play />
           {/each}
         </div>
       </div>

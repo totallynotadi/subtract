@@ -1,6 +1,9 @@
 <script>
   import Favorite from "svelte-material-icons/Heart.svelte";
   import DotsHorizontal from "svelte-material-icons/DotsHorizontal.svelte";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
 
   export let trackData = {};
   export let index = 0;
@@ -10,9 +13,20 @@
     let seconds = durationSeconds - minutes * 60;
     return `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
   };
+
+  const dispatchPlayEvent = () => {
+    dispatch("play", {
+      track: trackData,
+    });
+  };
 </script>
 
-<div class="item-container row">
+<div
+  class="item-container row"
+  on:click={dispatchPlayEvent}
+  on:keydown={() => {}}
+  on:keyup={() => {}}
+>
   <div class="left-align-data row">
     <div class="track-number">{index}</div>
     <div

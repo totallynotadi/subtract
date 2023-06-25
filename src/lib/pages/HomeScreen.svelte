@@ -23,6 +23,9 @@
     console.log(data.sectionContainer.sections.items[3]);
     return data;
   })();
+  const gotPlay = (event) => {
+    console.log(event.detail.track);
+  };
 </script>
 
 {#await getHomePage then data}
@@ -52,12 +55,12 @@
       />
     </Route>
     <Route path="playlist/*playlistId" let:params
-      ><PlaylistPage playlistId={params.playlistId} /></Route
+      ><PlaylistPage playlistId={params.playlistId} on:play /></Route
     >
-    <Route path="show/*showId" let:params>show</Route>
     <Route path="episode/*episodeId" let:params>episode</Route>
     <Route path="artist/*artistId" let:params>artist</Route>
     <Route path="album/*albumId" let:params>album</Route>
+    <Route path="show/*showId" let:params>show</Route>
   </Router>
 {/await}
 

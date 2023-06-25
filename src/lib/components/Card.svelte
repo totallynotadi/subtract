@@ -39,7 +39,6 @@
             alt=""
             id="image-beneath"
             class="stack-item image-beneath"
-            rel="prefetch"
           />
           <div
             class="card stack-item"
@@ -69,7 +68,7 @@
                     "PodcastOrAudiobookResponseWrapper" ||
                   cardData.content.__typename == "AlbumResponseWrapper"
                     ? typeof cardData.content.data.coverArt !== "undefined"
-                      ? cardData.content.data.coverArt.sources[1].url
+                      ? cardData.content.data.coverArt.sources[0].url
                       : "undefined"
                     : cardData.content.__typename == "ArtistResponseWrapper"
                     ? cardData.content.data.visuals.avatarImage.sources[0].url
@@ -78,7 +77,6 @@
                     : console.log(cardData)}
                   width="100%"
                   alt=""
-                  rel="prefetch"
                 />
               </div>
               <div class="stack-item card-overlay" style="">
@@ -234,11 +232,11 @@
     font-size: 0.9rem;
     color: var(--text-subdued);
 
-    overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.4rem;
     text-align: center;
 
+    overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;

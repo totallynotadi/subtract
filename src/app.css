@@ -47,6 +47,7 @@ a:hover,
 a:active {
   text-decoration: none;
   /* color: var(--text-subdued); */
+  color: inherit;
   /* color: white; */
 }
 .image-beneath {
@@ -146,6 +147,8 @@ a:active {
 
 .stack {
   display: grid;
+  /* grid-template-columns: 1; */
+  /* grid-template-rows: 1; */
 }
 .stack-item {
   grid-row: 1;
